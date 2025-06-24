@@ -1,1 +1,3 @@
-#Jogo da Velha MiniMax
+# Jogo da Velha MiniMax
+
+## MiniMax
