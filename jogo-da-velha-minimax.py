@@ -1,5 +1,4 @@
 
-
 def criar_tabuleiro():
     return [[" " for _ in range(3)] for _ in range(3)]
 
@@ -30,7 +29,7 @@ def jogada(tabuleiro, linha, coluna, jogador):
 
 def jogo_da_velha():
     tabuleiro = criar_tabuleiro()
-    jogador_atual = "X"
+    jogador_atual = "O"
 
     for _ in range(9):
         imprimir_tabuleiro(tabuleiro)
@@ -65,14 +64,23 @@ def avaliar_tabuleiro(tabuleiro):
 def movimentos_disponiveis(tab):
     return [(i, j) for i in range(3) for j in range(3) if tab[i][j] == " "]
 
+buscas = 0
+
 def minimax(tabuleiro, profundidade, maximizando):
     pontuacao = avaliar_tabuleiro(tabuleiro)
-
-    #if pontuacao != 0 or profundidade == 0:
+    global buscas
+    buscas += 1
+  
+    #imprimir_tabuleiro(tabuleiro)
+    #if pontuacao != 0 or profundidade == 9:
     if pontuacao != 0 or not movimentos_disponiveis(tabuleiro):
         #imprimir_tabuleiro(tabuleiro)
-        #print(f"{pontuacao}")
+        #print(f"{pontuacao} | {profundidade}")
+        #if profundidade == 5 or profundidade == 6:
+        #    print(f"{pontuacao} | {profundidade}")
         return pontuacao
+    
+    #buscas += 1
 
     if maximizando:
         melhor_valor = float("-inf")
@@ -84,6 +92,7 @@ def minimax(tabuleiro, profundidade, maximizando):
                     valor = minimax(tabuleiro, profundidade + 1, False)
                     tabuleiro[linha][coluna] = " "
                     melhor_valor = max(melhor_valor, valor)
+                    #buscas += 1
                     #melhor_valor += max(melhor_valor, valor)
                     #melhor_valor += valor
         #imprimir_tabuleiro(tabuleiro)
@@ -99,6 +108,7 @@ def minimax(tabuleiro, profundidade, maximizando):
                     valor = minimax(tabuleiro, profundidade + 1, True)
                     tabuleiro[linha][coluna] = " "
                     melhor_valor = min(melhor_valor, valor)
+                    #buscas += 1
                     #melhor_valor += min(melhor_valor, valor)
                     #melhor_valor += valor
         #imprimir_tabuleiro(tabuleiro)
@@ -109,19 +119,26 @@ def minimax(tabuleiro, profundidade, maximizando):
 def melhor_jogada(tabuleiro):
     melhor_valor = float("-inf")
     melhor_movimento = (-1, -1)
+    
+    global buscas
+    buscas = 0
+    
+    print("Mov.| Peso")
 
     for linha in range(3):
         for coluna in range(3):
             if tabuleiro[linha][coluna] == " ":
                 tabuleiro[linha][coluna] = "O"
-                valor = minimax(tabuleiro, 0, False)
+                valor = minimax(tabuleiro, 1, False)
                 tabuleiro[linha][coluna] = " "
-                print(f"valor {valor} {linha} {coluna}")
+                print(f"{linha} {coluna} | {valor} ")
                 if valor > melhor_valor:
                     melhor_valor = valor
-                    print(f"if melhor_valor {melhor_valor} {linha} {coluna}")
+                    #print(f"IF Peso | movimento {melhor_valor} {linha} {coluna}")
                     melhor_movimento = (linha, coluna)
-    print(f"melhor valor/movimento {melhor_valor} {melhor_movimento}")
+    
+    print(f"\n{melhor_movimento[0]} {melhor_movimento[1]} | {melhor_valor} <<<")
+    print(f"{buscas} buscas\n")
     return melhor_movimento
 
 # IA FIM #################################
