@@ -17,7 +17,6 @@ def verificar_vitoria(tabuleiro, jogador):
     # Verifica diagonais
     if all(tabuleiro[i][i] == jogador for i in range(3)) or all(tabuleiro[i][2 - i] == jogador for i in range(3)):
         return True
-    
     return False
 
 def jogada(tabuleiro, linha, coluna, jogador):
@@ -26,11 +25,17 @@ def jogada(tabuleiro, linha, coluna, jogador):
         return True
     return False
 
-
 def jogo_da_velha():
     tabuleiro = criar_tabuleiro()
-    jogador_atual = "O"
 
+    iniciar = input("Deseja iniciar o jogo? S/N\n")
+    print("")
+
+    if iniciar.lstrip()[:1].upper() == "S":
+        jogador_atual = "X"
+    else:
+        jogador_atual = "O"
+    
     for _ in range(9):
         imprimir_tabuleiro(tabuleiro)
             
@@ -58,7 +63,7 @@ def jogo_da_velha():
 def avaliar_tabuleiro(tabuleiro):
     for jogador in ["X", "O"]:
         if verificar_vitoria(tabuleiro, jogador):
-            return 10 if jogador == "O" else -10
+            return 1 if jogador == "O" else -1
     return 0
 
 def movimentos_disponiveis(tab):
@@ -73,6 +78,7 @@ def minimax(tabuleiro, profundidade, maximizando):
   
     #imprimir_tabuleiro(tabuleiro)
     #if pontuacao != 0 or profundidade == 9:
+    #if (pontuacao != 0 or not movimentos_disponiveis(tabuleiro)) and profundidade < 10:
     if pontuacao != 0 or not movimentos_disponiveis(tabuleiro):
         #imprimir_tabuleiro(tabuleiro)
         #print(f"{pontuacao} | {profundidade}")
@@ -130,8 +136,9 @@ def melhor_jogada(tabuleiro):
             if tabuleiro[linha][coluna] == " ":
                 tabuleiro[linha][coluna] = "O"
                 valor = minimax(tabuleiro, 1, False)
+                #imprimir_tabuleiro(tabuleiro)
                 tabuleiro[linha][coluna] = " "
-                print(f"{linha} {coluna} | {valor} ")
+                print(f"{linha} {coluna} | {valor}")
                 if valor > melhor_valor:
                     melhor_valor = valor
                     #print(f"IF Peso | movimento {melhor_valor} {linha} {coluna}")
